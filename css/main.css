@@ -1,0 +1,32 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+body {
+	/* cursor: none; */
+}
+
+/* configurações do cursor */
+.custom-cursor {
+	position: absolute;
+	top: 13px;
+	left: 13px;
+}
+
+.pointer{
+    display: block;
+	width: 75px;
+	height: 75px;
+	background-position: top left;
+	background-size: contain;
+	background-repeat: no-repeat;
+
+}
+
+/* cursor normal ao clicar */
+.site-wide.active .pointer {
+	width: 65px;
+	height: 65px;
+}
