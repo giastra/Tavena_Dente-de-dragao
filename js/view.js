@@ -12,10 +12,10 @@ import {cartaz} from './controler.js'
 
   
 
-   // Obtém elementos
+    // Obtém elementos
     const modal = document.getElementById("modalOverlay");
     const btnClose = document.getElementById("modalClose");
-    const btnOk = document.getElementById("btnOk");
+    let btnOk = document.getElementById("btnOk");
     const header = document.getElementById("header")
     const content = document.getElementById("content")
     let quadro = document.getElementById('quadro') 
@@ -119,10 +119,10 @@ import {cartaz} from './controler.js'
     btnOk.innerHTML = `Remover`;
 
     // limpar listeners antigos
-    const novoBtnOk = btnOk.cloneNode(true);
-    btnOk.parentNode.replaceChild(novoBtnOk, btnOk);
+    btnOk.replaceWith(btnOk.cloneNode(true));
+    btnOk = document.getElementById("btnOk");
 
-    novoBtnOk.addEventListener('click', () => {
+    btnOk.addEventListener('click', () => {
         const id = parseInt(document.getElementById('idRemover').value);
 
         removerCartaz(id);
@@ -156,11 +156,11 @@ import {cartaz} from './controler.js'
         btnOk.innerHTML = `Adicionar`;
 
         // Remove qualquer listener antigo
-        const novoBtnOk = btnOk.cloneNode(true);
-        btnOk.parentNode.replaceChild(novoBtnOk, btnOk);
+        btnOk.replaceWith(btnOk.cloneNode(true));
+        btnOk = document.getElementById("btnOk");
 
         // Adiciona o novo listener
-        novoBtnOk.addEventListener('click', () => {
+        btnOk.addEventListener('click', () => {
 
             let nome = document.getElementById('nome').value;
             let titulo = document.getElementById('titulo').value;
@@ -185,20 +185,28 @@ import {cartaz} from './controler.js'
     // adicionar cartaz
     document.getElementById('Adicionar').addEventListener('click', openModalCriar);
 
+    // serve para fechar a modal
     function closeModal(){
         modal.style.display = "none";
     }
     
-
-    document.getElementById('modalClose').addEventListener('click',closeModal)
+    // adiciona a opção de fechar a modal ao clicar no x
+    btnClose.addEventListener('click',closeModal)
 
     
-   // -------------------------------------------------------------
+    // -------------------------------------------------------------
     // ---------------------------INIT----------------------------- 
     // -------------------------------------------------------------
 
+    // cria todos os cards iniciais
     for(let obj in todosCartazes) {
         quadro = document.getElementById('quadro') 
         crirarCartz(todosCartazes[obj],obj)
         
     }
+
+    // permite o scrol horizontal
+    quadro.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    quadro.scrollLeft += e.deltaY;
+    });
