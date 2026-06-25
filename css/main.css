@@ -41,13 +41,14 @@ button{
     overflow-y: hidden;
     height: 650px;
     gap: 60px;
-    
+    scrollbar-color: rgb(139, 112, 77) rgb(77, 58, 33);
+    scrollbar-width: thin;
+
 }
 
+
 .colunaPoster{
-    /* background-color: aqua; */
     display: flex;
-    /* justify-content: space-around; */
     flex-flow: column;
     height: auto;
     gap: 10px;

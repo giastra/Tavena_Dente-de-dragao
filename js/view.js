@@ -205,3 +205,8 @@ import {cartaz} from './controler.js'
         
     }
 
+    // permite o scrol horizontal
+    quadro.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    quadro.scrollLeft += e.deltaY;
+    });
