@@ -58,7 +58,7 @@ import {cartaz} from './controler.js'
             
             btnOk.innerHTML=`Abrir ficha`
 
-            openModal()
+            modal.style.display = "flex";
             window.open(obj.ficha, "_blank");
         })
 
@@ -77,75 +77,122 @@ import {cartaz} from './controler.js'
         
     }
 
+    // -------------------------------------------------------------
+    // ---------------------------Remover----------------------------- 
+    // -------------------------------------------------------------
+
+    function removerCartaz(id) {
+    // 1. Remover do localStorage
+    let lista = JSON.parse(localStorage.getItem('todosCartazes'));
+    lista.splice(id, 1);
+    localStorage.setItem('todosCartazes', JSON.stringify(lista));
+
+    // 2. Remover do DOM
+    const poster = document.getElementById(id);
+    if (poster) {
+        poster.remove();
+    }
+
+    // 3. Reorganizar IDs dos posters restantes
+    const todosPosters = quadro.querySelectorAll('.poster');
+    todosPosters.forEach((p, index) => {
+        p.id = index;
+    });
+
+    // 4. Reorganizar colunas (remover colunas vazias)
+    const colunas = quadro.querySelectorAll('.colunaPoster');
+    colunas.forEach(col => {
+        if (col.querySelectorAll('.poster').length === 0) {
+            col.remove();
+        }
+    });
+    }
+
+    document.getElementById('Remover').addEventListener('click', () => {
+    header.innerHTML = `Remover cartaz`;
+
+    content.innerHTML = `
+        <p>ID do cartaz a remover</p>
+        <input id='idRemover' type='number' min='0'>
+    `;
+
+    btnOk.innerHTML = `Remover`;
+
+    // limpar listeners antigos
+    const novoBtnOk = btnOk.cloneNode(true);
+    btnOk.parentNode.replaceChild(novoBtnOk, btnOk);
+
+    novoBtnOk.addEventListener('click', () => {
+        const id = parseInt(document.getElementById('idRemover').value);
+
+        removerCartaz(id);
+        closeModal();
+    });
+
+    modal.style.display = "flex";
+    });
 
     // -------------------------------------------------------------
     // ---------------------------MODAL----------------------------- 
     // -------------------------------------------------------------
     // Função para abrir modal de adicionar personagem
-    function openModal() {
-            modal.style.display = "flex";
-      
+    function openModalCriar() {
+
+        header.innerHTML = `Adicionar cartaz`;
+
+        content.innerHTML = `
+            <p>Nome</p>
+            <input id='nome' type='text'>
+            <p>Titulo</p>
+            <input id='titulo' type='text'>
+            <p>Sistema</p>
+            <input id='sistema' type='text'>
+            <p>Link para a ficha</p>
+            <input id='ficha' type='text'>
+            <p>Link para a imagem</p>
+            <input id='imagem' type='text'>
+        `;
+
+        btnOk.innerHTML = `Adicionar`;
+
+        // Remove qualquer listener antigo
+        const novoBtnOk = btnOk.cloneNode(true);
+        btnOk.parentNode.replaceChild(novoBtnOk, btnOk);
+
+        // Adiciona o novo listener
+        novoBtnOk.addEventListener('click', () => {
+
+            let nome = document.getElementById('nome').value;
+            let titulo = document.getElementById('titulo').value;
+            let sistema = document.getElementById('sistema').value;
+            let ficha = document.getElementById('ficha').value;
+            let imagem = document.getElementById('imagem').value;
+
+            const cart = new cartaz(nome, titulo, sistema, ficha, imagem);
+
+            todosCartazes = JSON.parse(localStorage.getItem('todosCartazes'));
+            todosCartazes.push(cart);
+            localStorage.setItem('todosCartazes', JSON.stringify(todosCartazes));
+
+            crirarCartz(cart, todosCartazes.length - 1);
+
+            closeModal();
+        });
+
+        modal.style.display = "flex";
     }
-
-    // Função segura para fechar modal
-    function closeModal() {
-            modal.style.display = "none";
-    }
-
-    // Eventos da modal
-   
-    btnClose.addEventListener("click", closeModal);
-    btnOk.addEventListener("click", closeModal);
-
-
-    // btn remover cartaz
-    document.getElementById('Remover').addEventListener('click',()=>{
-        
-        
-    })
 
     // adicionar cartaz
-    document.getElementById('Adicionar').addEventListener('click',()=>{
-    header.innerHTML=`Adicionar cartaz`
+    document.getElementById('Adicionar').addEventListener('click', openModalCriar);
 
-    content.innerHTML=`
-    <p>Nome</p>
-    <input id='nome' type='text'>
-    <p>Titulo</p>
-    <input id='titulo' type='text'>
-    <p>Sistema</p>
-    <input id='sistema' type='text'>
-    <p>Link para a ficha</p>
-    <input id='ficha' type='text'>
-    <p>Link para a imagem</p>
-    <input id='imagem' type='text'>
-    `
-    
-    btnOk.innerHTML=`Adicionar`
-
-    // btn criar o cartaz 
-    btnOk.addEventListener('click',()=>{
-        let nome = document.getElementById('nome').value
-        let titulo = document.getElementById('titulo').value
-        let sistema = document.getElementById('sistema').value
-        let ficha = document.getElementById('ficha').value
-        let imagem = document.getElementById('imagem').value
-
-        const cart = new cartaz(nome,titulo,sistema,ficha,imagem)
-        todosCartazes = JSON.parse(localStorage.getItem('todosCartazes'))
-        todosCartazes.push(cart)
-        console.log(todosCartazes);
-        localStorage.setItem('todosCartazes',JSON.stringify(todosCartazes))
-        crirarCartz(cart)
-        
-    })
-
-    openModal()
-    })
-
-
+    function closeModal(){
+        modal.style.display = "none";
+    }
     
 
+    document.getElementById('modalClose').addEventListener('click',closeModal)
+
+    
    // -------------------------------------------------------------
     // ---------------------------INIT----------------------------- 
     // -------------------------------------------------------------
