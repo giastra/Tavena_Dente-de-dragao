@@ -1,4 +1,6 @@
-import {cartaz} from './controler.js'
+import {cartaz} from './CatazControler.js'
+
+export function CartazFuncoes() {
 
     // setap para o local storage 
     let todosCartazes= []
@@ -210,3 +212,4 @@ import {cartaz} from './controler.js'
     e.preventDefault();
     quadro.scrollLeft += e.deltaY;
     });
+}
